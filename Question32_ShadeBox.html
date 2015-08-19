@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title> Question 32 Shade Box Demo</title>
+<style>
+/* square box */
+.squarebox{
+	width:80px;
+	height:80px;
+	background-color:white;
+	border:1px solid;
+	cursor:pointer;
+}
+
+/* preselected square box */
+.squarebox_selected{
+	width:80px;
+	height:80px;
+	background-color:blue;
+	border:1px solid;
+}
+</style>
+<script type='text/javascript' src='http://code.jquery.com/jquery-1.5.2.js'></script>
+<script type='text/javascript'>
+$(function(){
+	$(".squarebox").click(function() {
+	    //toggle the square box
+	    if ( rgb2hex($(this).css("backgroundColor")) == "#ffffff" ){
+	    	//user selects the box, so it is highlighted in red
+	    	$(this).css("backgroundColor", "red");
+	    }else{
+	    	//user deselects the box, so it is highlighted in its original color, white
+	    	$(this).css("backgroundColor", "white");
+	    } 
+	});
+
+	//function used by squarebox class click to convert rgb values into hexadecimal values
+	function rgb2hex(orig){
+	 	var rgb = orig.replace(/\s/g,'').match(/^rgba?\((\d+),(\d+),(\d+)/i);
+	 	return (rgb && rgb.length === 4) ? "#" +
+	  	("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+	  	("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+	  	("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : orig;
+	}
+
+	//begin to draw the mirror line
+	//calculate the offset to find the coordinates of the mirror line start div and mirror line end div
+	var off1 = getOffset(document.getElementById('mirror_line_start_div'));
+    var off2 = getOffset(document.getElementById('mirror_line_end_div'));
+
+    // top left x,y coordinates
+    var x1 = off1.left;
+    var y1 = off1.top;
+
+    // bottom right x,y coordinates
+    var x2 = off2.left + off2.width;
+    var y2 = off2.top+off2.height;
+
+    // distance
+    var length = Math.sqrt(((x2-x1) * (x2-x1)) + ((y2-y1) * (y2-y1)));
+
+    // center
+    var cx = ((x1 + x2) / 2) - (length / 2);
+    var cy = ((y1 + y2) / 2) - (5 / 2);
+
+    // angle
+    var angle = Math.atan2((y1-y2),(x1-x2))*(180/Math.PI);
+
+    // make hr
+    var htmlLine = "<div style='padding:0px; margin:0px; height:3px; background-color:black; line-height:1px; position:absolute; left:" + cx + "px; top:" + cy + "px; width:" + length + "px; -moz-transform:rotate(" + angle + "deg); -webkit-transform:rotate(" + angle + "deg); -o-transform:rotate(" + angle + "deg); -ms-transform:rotate(" + angle + "deg); transform:rotate(" + angle + "deg);' />";
+
+    //draw the mirror line
+    jQuery('#line_div').html(htmlLine);
+    //end to draw the mirror line
+    
+    //function to calculate the offset of the square box
+    function getOffset( el ) {
+	    var rect = el.getBoundingClientRect();
+	    return {
+	        left: rect.left + window.pageXOffset,
+	        top: rect.top + window.pageYOffset,
+	        width: rect.width || el.offsetWidth,
+	        height: rect.height || el.offsetHeight
+	    };
+	}
+}); 
+</script>
+</head>
+<body>
+	<div id="line_div"></div>
+	<p>Reflect the outline of the shape (highlighted in blue) in the mirror line.</p>
+	<table>
+		<tr>
+			<td><div class="squarebox"></div></td>
+			<td><div class="squarebox"></div></td>
+			<td><div class="squarebox_selected"></div></td>
+			<td><div class="squarebox"></div></td>
+			<td><div class="squarebox"></div></td>
+		</tr>
+		<tr>
+			<td><div class="squarebox"></div></td>
+			<td><div id="mirror_line_start_div" class="squarebox"></div></td>
+			<td><div class="squarebox_selected"></div></td>
+			<td><div class="squarebox_selected"></div></td>
+			<td><div class="squarebox_selected"></div></td>
+		</tr>
+		<tr>
+			<td><div class="squarebox"></div></td>
+			<td><div class="squarebox"></div></td>
+			<td><div class="squarebox"></div></td>
+			<td><div class="squarebox"></div></td>
+			<td><div class="squarebox"></div></td>
+		</tr>
+		<tr>
+			<td><div class="squarebox"></div></td>
+			<td><div class="squarebox"></div></td>
+			<td><div class="squarebox"></div></td>
+			<td><div id="mirror_line_end_div" class="squarebox"></div></td>
+			<td><div class="squarebox"></div></td>
+		</tr>
+		<tr>
+			<td><div class="squarebox"></div></td>
+			<td><div class="squarebox"></div></td>
+			<td><div class="squarebox"></div></td>
+			<td><div class="squarebox"></div></td>
+			<td><div class="squarebox"></div></td>
+		</tr>
+	</table>
+</body>
+</html>
+
